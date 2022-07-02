@@ -22,3 +22,9 @@ def flag_setter(v=0,l=0,g=0,e=0):
     Flags[3]=str(e)
     #setting value of flag register
     Reg_val[7]="000000000000"+Flags[0]+Flags[1]+Flags[2]+Flags[3]
+
+def func_typ_D():
+    pass
+
+def func_typ_E():
+    pass
