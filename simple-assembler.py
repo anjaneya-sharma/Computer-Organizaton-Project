@@ -78,7 +78,7 @@ def is_valid_memory(memory):
         return False
     
     for i in memory:
-        if i!=0 or i!=1:
+        if i!='0' and i!='1':
             print("Error at line {} : General Syntax Error".format(current_line))
             return False
     
@@ -141,6 +141,9 @@ def check_mov(instruction):
         return False
     
     if instruction[1] not in list_of_registers[:7]:
+        if instruction[1]=='flags':
+            print('Error at {} : illegal use of flag registers'.format(current_line))
+            return False
         print('Error at {} : invalid register name'.format(current_line))
         return False
 
