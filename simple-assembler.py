@@ -44,12 +44,13 @@ def is_valid_register(register):
     
     if register=='flags':
         print("Error at line {} : illegal use of flag registers".format(current_line))
+        return False
 
-    if register in list_of_registers:
-        return True
+    if register not in list_of_registers:
+        print("Error at line {} : invalid register name".format(current_line))
+        return False
 
-    print("Error at line {} : invalid register name".format(current_line))
-    return False
+    return True
 
 def is_valid_immediate(immediate):
     
@@ -70,16 +71,30 @@ def is_valid_immediate(immediate):
     
     return True
 
+def is_valid_memory(memory):
+
+    if len(memory)!=8:
+        print("Error at line {} : General Syntax Error".format(current_line))
+        return False
+    
+    for i in memory:
+        if i!=0 or i!=1:
+            print("Error at line {} : General Syntax Error".format(current_line))
+            return False
+    
+    return True
+
+
 def check_typeA(instruction):
 
     if len(instruction)!=4:
         print('Error at {} : General Syntax Error'.format(current_line))
         return False
     
-    if is_valid_register(instruction[1])  and is_valid_register(instruction[2]) and is_valid_register(instruction[3]):
-        return True
+    if not is_valid_register(instruction[1])  or not is_valid_register(instruction[2]) or not is_valid_register(instruction[3]):
+        return False
 
-    return False
+    return True
 
 def check_typeB(instruction):
 
@@ -93,13 +108,60 @@ def check_typeB(instruction):
     return True
 
 def check_typeC(instruction):
-    return 0
+    
+    if len(instruction)!=3:
+        print('Error at {} : General Syntax Error'.format(current_line))
+        return False
+
+    if not is_valid_register(instruction[1])  or not is_valid_register(instruction[2]):
+        return False
+    
+    return True
+
 
 def check_typeD(instruction):
-    return 0
+
+    if len(instruction)!=3:
+        print('Error at {} : General Syntax Error'.format(current_line))
+        return False
+
+    if not is_valid_register(instruction[1]) or not is_valid_memory(instruction[2]):
+        return False
+
 
 def check_typeE(instruction):
     return 0
+
+def check_mov(instruction):
+
+    list_of_registers=list(Reg_dict.keys())
+
+    if len(instruction)!=3:
+        print('Error at {} : General Syntax Error'.format(current_line))
+        return False
+    
+    if instruction[1] not in list_of_registers[:7]:
+        print('Error at {} : invalid register name'.format(current_line))
+        return False
+
+    if instruction[2][0]=='r' and instruction[2] not in list_of_registers:
+        print('Error at {} : invalid register name'.format(current_line))
+        return False
+
+    if instruction[2][0]=='r' and instruction[2] in list_of_registers:
+        return True
+    
+    if instruction[2][0]=='$':
+        try:
+            temp=int(instruction[2][1:])
+            if temp>=256 or temp<0:
+                print('Error at line {} : illegal immediate value'.format(current_line))
+                return False
+        except ValueError:
+            print('Error at {} : General Syntax Error'.format(current_line))
+            return False
+    
+    return True
 
 
 def check_errors(code):
@@ -120,14 +182,23 @@ def check_errors(code):
 
         current_line+=1
 
+        if line[0]=='mov':
+
+            if check_mov(line)==False:
+                return True
+            continue
+
         if line[0] in Reg_typ_A:
 
             if check_typeA(line)==False:
                 return True
 
         elif line[0] in Reg_typ_B:
-
+            
             if check_typeB(line)==False:
+                if line[0]=='mov':
+                    if check_typeC(line)==True:
+                        continue
                 return True
 
         elif line[0] in Reg_typ_C:
