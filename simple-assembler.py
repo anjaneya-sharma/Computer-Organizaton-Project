@@ -175,15 +175,32 @@ def check_errors(code):
     global Reg_typ_D
     global Reg_typ_E
     
-    count_var=0
-    flag_reading_var=False
-
     global current_line
     current_line=0
+
+    global list_var
+    list_var=[]
 
     for line in code:
 
         current_line+=1
+
+        if line[0]=='var':
+            
+            count_var+=1
+
+            if count_var!=current_line:
+                print('Error at line {} : General Syntax Error'.format(current_line))
+                return True
+
+            if len(line)!=2:
+                print('Error at line {} : General Syntax Error'.format(current_line))
+                return True
+
+            if line[1] not in list_var:
+                list_var.append(line[1])
+            else:
+                print('Error at line {} : General Syntax Error'.format(current_line))
 
         if line[0]=='mov':
 
