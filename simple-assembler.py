@@ -42,7 +42,7 @@ def is_valid_register(register):
 
     list_of_registers=list(Reg_dict.keys())
     
-    if register=='flag':
+    if register=='flags':
         print("Error at line {} : illegal use of flag registers".format(current_line))
 
     if register in list_of_registers:
@@ -50,6 +50,25 @@ def is_valid_register(register):
 
     print("Error at line {} : invalid register name".format(current_line))
     return False
+
+def is_valid_immediate(immediate):
+    
+    if immediate[0]!='$':
+        print("Error at line {} : invalid immediate".format(current_line))
+        return False
+    
+    try:
+        immediate=int(immediate[1:])
+
+        if immediate>=256 or immediate<0:
+            print("Error at line {} : illegal immediate value".format(current_line))
+            return False
+
+    except:
+        print("Error at line {} : General Syntax Error".format(current_line))
+        return False
+    
+    return True
 
 def check_typeA(instruction):
 
@@ -63,7 +82,15 @@ def check_typeA(instruction):
     return False
 
 def check_typeB(instruction):
-    return 0
+
+    if len(instruction)!=3:
+        print('Error at {} : General Syntax Error'.format(current_line))
+        return False
+    
+    if not is_valid_register(instruction[1]) or not is_valid_immediate(instruction[2]):
+        return False
+
+    return True
 
 def check_typeC(instruction):
     return 0
