@@ -15,6 +15,8 @@ Flags=["0","0","0","0"] #(V,L,G,E)
 
 Reg_val=["0","0","0","0","0","0","0","0"]
 
+var_val={}
+
 def flag_setter(v=0,l=0,g=0,e=0):
     Flags[0]=str(v)
     Flags[1]=str(l)
@@ -63,7 +65,23 @@ def func_typ_C(argument):
 
 
 def func_typ_D(argument,lno):
-    pass
+    rval=Reg_dict[argument[1]]
+    memadd=str(bin(lno))
+    memadd=memadd[2:]
+    mem=memadd.zfill(8)
+    op=opcodes[argument[0]]
+    # flag_setter()
+    
+    reg=argument[1]
+    var=argument[2]
+
+    if argument[0] =="ld":
+        Reg_val[int(reg[1:])-1]=var_val[var]
+
+    elif argument[0]=="st":
+        var_val[var] =Reg_val[int(reg[1:])-1]
+
+    return op+rval+mem
 
 def func_typ_E():
     pass
