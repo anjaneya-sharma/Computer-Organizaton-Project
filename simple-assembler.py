@@ -23,8 +23,14 @@ def flag_setter(v=0,l=0,g=0,e=0):
     #setting value of flag register
     Reg_val[7]="000000000000"+Flags[0]+Flags[1]+Flags[2]+Flags[3]
 
-def func_typ_D():
-    pass
+def func_typ_D(argument,lno):
+    rval=Reg_dict[argument[1]]
+    memadd=str(bin(lno))
+    memadd=memadd[2:]
+    mem=memadd.zfill(8)
+    op=opcodes[argument[0]]
+    # flag_setter()
+    return op+rval+mem
 
 def func_typ_E():
     pass
