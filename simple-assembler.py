@@ -111,7 +111,7 @@ def check_typeC(instruction):
         print('Error at {} : General Syntax Error'.format(current_line))
         return False
 
-    if not is_valid_register(instruction[1])  or not is_valid_variable(instruction[2]):
+    if not is_valid_register(instruction[1])  or not is_valid_register(instruction[2]):
         return False
     
     return True
@@ -126,9 +126,27 @@ def check_typeD(instruction):
     if not is_valid_register(instruction[1]) or not is_valid_variable(instruction[2]):
         return False
 
+    return True
+
 
 def check_typeE(instruction):
-    return 0
+    
+    if len(instruction)>2:
+        print("Error at line {} : General Syntax Error".format(current_line))
+        return False
+    
+    if len(instruction[1])>8 or len(instruction[1])==0:
+        print("Error at line {} : General Syntax Error".format(current_line))
+        return False
+    
+    for i in instruction[1]:
+        if i!='0' and i!='1':
+            print("Error at line {} : General Syntax Error".format(current_line))
+            return False
+
+    return True
+
+
 
 def check_mov(instruction):
 
@@ -204,12 +222,9 @@ def check_errors(code):
 
             if line[1] not in list_var:
                 if line[1] in list_label:
-                    print('Error at line {} : General Syntax Error'.format(current_line))
+                    print('Error at line {} : Misuse of label as variable'.format(current_line))
                     return True
                 list_var.append(line[1])
-            else:
-                print('Error at line {} : Use of undefined variable'.format(current_line))
-                return True
 
         elif line[0]=='mov':
 
@@ -246,12 +261,13 @@ def check_errors(code):
                 return True
 
         elif line[0].find(':')!=-1:
+
             if line[0].find(':')!=len(line[0])-1:
-                print('where tf you put colon at Error at line {} : General Syntax Error'.format(current_line))
+                print('Error at line {} : General Syntax Error'.format(current_line))
                 return True
             
             if line[0][:len(line[0])-1] in list_label:
-                print('duh already defined as a label before Error at line {} : General Syntax Error'.format(current_line))
+                print('Error at line {} : General Syntax Error'.format(current_line))
                 return True
             
             if line[0][:len(line[0])-1] in list_var:
@@ -259,6 +275,9 @@ def check_errors(code):
                 return True
             
             list_label.append(line[0][:len(line[0])-1])
+
+            if len(line)==1:
+                continue
 
             if line[1:][0] in Reg_typ_A:
 
@@ -284,25 +303,42 @@ def check_errors(code):
 
                 if check_typeE(line[1:])==False:
                     return True
+            
+            elif line[1:][0]=='hlt':
+
+                if len(line[1:])==1:
+                    count_hlt+=1
+
+                    if count_hlt>1:
+                        print("Error at line {} : hlt not being used as the last instruction".format(hlt_line))
+                        return True
+
+            else:
+                print("Error at line {} : General Syntax Error".format(current_line))
+                return False
 
         elif line[0]=='hlt':
 
             if len(line)!=1:
-                print(" what Error at line {} : General Syntax Error".format(current_line))
+                print("Error at line {} : General Syntax Error".format(current_line))
+                return True
             
             count_hlt+=1
 
             if count_hlt>1:
                 print("Error at line {} : hlt not being used as the last instruction".format(hlt_line))
+                return True
             
             hlt_line=current_line
 
         else:
-            print("Error at line {} : General Syntax Error".format(current_line))
+            print("Error at line {} : Illegal instruction name".format(current_line))
             return False
     
     if count_hlt==0:
         print("Error at line {} : missing hlt instruction".format(current_line))
+        return True
+    
     return False
         
 
