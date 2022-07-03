@@ -71,16 +71,14 @@ def is_valid_immediate(immediate):
     
     return True
 
-def is_valid_memory(memory):
+def is_valid_variable(variable):
 
-    if len(memory)!=8:
-        print("Error at line {} : General Syntax Error".format(current_line))
-        return False
-    
-    for i in memory:
-        if i!='0' and i!='1':
-            print("Error at line {} : General Syntax Error".format(current_line))
+    if variable not in list_var:
+        if variable in list_label:
+            print('Error at line {}: Misuse of label as variable'.format(current_line))
             return False
+        print('Error at line {}: Undefined variable'.format(current_line))
+        return False
     
     return True
 
@@ -113,7 +111,7 @@ def check_typeC(instruction):
         print('Error at {} : General Syntax Error'.format(current_line))
         return False
 
-    if not is_valid_register(instruction[1])  or not is_valid_register(instruction[2]):
+    if not is_valid_register(instruction[1])  or not is_valid_variable(instruction[2]):
         return False
     
     return True
@@ -125,7 +123,7 @@ def check_typeD(instruction):
         print('Error at {} : General Syntax Error'.format(current_line))
         return False
 
-    if not is_valid_register(instruction[1]) or not is_valid_memory(instruction[2]):
+    if not is_valid_register(instruction[1]) or not is_valid_variable(instruction[2]):
         return False
 
 
@@ -180,6 +178,10 @@ def check_errors(code):
 
     global list_var
     list_var=[]
+    count_var=0
+
+    global list_label
+    list_label=[]
 
     for line in code:
 
@@ -190,7 +192,7 @@ def check_errors(code):
             count_var+=1
 
             if count_var!=current_line:
-                print('Error at line {} : General Syntax Error'.format(current_line))
+                print('Error at line {} : Variable not declared at the beginning'.format(current_line))
                 return True
 
             if len(line)!=2:
@@ -198,9 +200,13 @@ def check_errors(code):
                 return True
 
             if line[1] not in list_var:
+                if line[1] in list_label:
+                    print('Error at line {} : General Syntax Error'.format(current_line))
+                    return True
                 list_var.append(line[1])
             else:
-                print('Error at line {} : General Syntax Error'.format(current_line))
+                print('Error at line {} : Use of undefined variable'.format(current_line))
+                return True
 
         if line[0]=='mov':
 
