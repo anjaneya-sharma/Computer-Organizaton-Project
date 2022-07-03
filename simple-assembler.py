@@ -34,8 +34,8 @@ def func_typ_C(argument):
         
         re3=int(Reg_val[int(argument[1][1:])-1])
         re4=int(Reg_val[int(argument[2][1:])-1])
-        Reg_val[0]=re3//re4
-        Reg_val[1]=re3%re4
+        Reg_val[0]=str(re3//re4)
+        Reg_val[1]=str(re3%re4)
 
         return opcodes[argument[0]]+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
 
