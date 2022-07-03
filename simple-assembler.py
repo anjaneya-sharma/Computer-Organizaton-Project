@@ -63,13 +63,7 @@ def func_typ_C(argument):
 
 
 def func_typ_D(argument,lno):
-    rval=Reg_dict[argument[1]]
-    memadd=str(bin(lno))
-    memadd=memadd[2:]
-    mem=memadd.zfill(8)
-    op=opcodes[argument[0]]
-    # flag_setter()
-    return op+rval+mem
+    pass
 
 def func_typ_E():
     pass
