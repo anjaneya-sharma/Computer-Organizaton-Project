@@ -183,6 +183,9 @@ def check_errors(code):
     global list_label
     list_label=[]
 
+    global count_hlt
+    count_hlt=0
+
     for line in code:
 
         current_line+=1
@@ -208,13 +211,13 @@ def check_errors(code):
                 print('Error at line {} : Use of undefined variable'.format(current_line))
                 return True
 
-        if line[0]=='mov':
+        elif line[0]=='mov':
 
             if check_mov(line)==False:
                 return True
             continue
 
-        if line[0] in Reg_typ_A:
+        elif line[0] in Reg_typ_A:
 
             if check_typeA(line)==False:
                 return True
@@ -241,10 +244,65 @@ def check_errors(code):
             
             if check_typeE(line)==False:
                 return True
-        
-        # elif line[0]=='var':
-        #     if check_var(line)
-        
+
+        elif line[0].find(':')!=-1:
+            if line[0].find(':')!=len(line[0])-1:
+                print('where tf you put colon at Error at line {} : General Syntax Error'.format(current_line))
+                return True
+            
+            if line[0][:len(line[0])-1] in list_label:
+                print('duh already defined as a label before Error at line {} : General Syntax Error'.format(current_line))
+                return True
+            
+            if line[0][:len(line[0])-1] in list_var:
+                print('Error at line {} : Misuse of variable as label'.format(current_line))
+                return True
+            
+            list_label.append(line[0][:len(line[0])-1])
+
+            if line[1:][0] in Reg_typ_A:
+
+                if check_typeA(line[1:])==False:
+                    return True
+            
+            elif line[1:][0] in Reg_typ_B:
+
+                if check_typeB(line[1:])==False:
+                    return True
+            
+            elif line[1:][0] in Reg_typ_C:
+
+                if check_typeC(line[1:])==False:
+                    return True
+                
+            elif line[1:][0] in Reg_typ_D:
+
+                if check_typeD(line[1:])==False:
+                    return True
+            
+            elif line[1:][0] in Reg_typ_E:
+
+                if check_typeE(line[1:])==False:
+                    return True
+
+        elif line[0]=='hlt':
+
+            if len(line)!=1:
+                print(" what Error at line {} : General Syntax Error".format(current_line))
+            
+            count_hlt+=1
+
+            if count_hlt>1:
+                print("Error at line {} : hlt not being used as the last instruction".format(hlt_line))
+            
+            hlt_line=current_line
+
+        else:
+            print("Error at line {} : General Syntax Error".format(current_line))
+            return False
+    
+    if count_hlt==0:
+        print("Error at line {} : missing hlt instruction".format(current_line))
     return False
         
 
