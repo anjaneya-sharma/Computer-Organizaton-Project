@@ -23,6 +23,45 @@ def flag_setter(v=0,l=0,g=0,e=0):
     #setting value of flag register
     Reg_val[7]="000000000000"+Flags[0]+Flags[1]+Flags[2]+Flags[3]
 
+def func_typ_C(argument):
+    if argument[0]=="mov": #mov register
+        re1=int(Reg_val[int(argument[1][1:])-1])
+        Reg_val[int(argument[2][1:])-1]=str(re1)
+        
+        return opcodes[argument[0]]+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
+
+    elif argument[0]=="div":
+        
+        re3=int(Reg_val[int(argument[1][1:])-1])
+        re4=int(Reg_val[int(argument[2][1:])-1])
+        Reg_val[0]=re3//re4
+        Reg_val[1]=re3%re4
+
+        return opcodes[argument[0]]+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
+
+
+    elif argument[0]=="not":
+        re1=int(Reg_val[int(argument[1][1:])-1])
+        re2=~(re1)
+        Reg_val[int(argument[2][1:])-1]=str(re2)
+
+        return opcodes[argument[0]]+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
+    
+    
+    elif argument[0]=="cmp":
+        re1=int(Reg_val[int(argument[1][1:])-1])
+        re2=int(Reg_val[int(argument[2][1:])-1])
+        if re1==re2:
+            Flags[3]="1"
+        elif re1>re2:
+            Flags[2]="1"
+        elif re1<re2:
+            Flags[1]="1"
+        
+        return opcodes[argument[0]]+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
+
+
+
 def func_typ_D(argument,lno):
     rval=Reg_dict[argument[1]]
     memadd=str(bin(lno))
