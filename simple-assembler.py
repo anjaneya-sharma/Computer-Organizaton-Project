@@ -25,17 +25,44 @@ def flag_setter(v=0,l=0,g=0,e=0):
     #setting value of flag register
     Reg_val[7]="000000000000"+Flags[0]+Flags[1]+Flags[2]+Flags[3]
 
+
+def func_typ_B(argument):
+    if argument[0]=="mov":
+        reg=int(argument[1][1:])
+        imm=int(argument[2][1:])
+        Reg_val[reg]=imm
+
+        return opcodes[argument[0]]+Reg_dict[argument[1]]+str((bin(imm))[2:])
+
+    
+    elif argument[0]=="ls":
+        r1=int(Reg_val[int(argument[1][1:])])    
+        imm=int(argument[2][1:])
+        Reg_val[int(argument[1][1:])]=r1<<imm
+
+        return opcodes[argument[0]]+Reg_dict[argument[1]]+str((bin(imm))[2:]) 
+    
+    
+    elif argument[0]=="rs":
+        r1=int(Reg_val[int(argument[1][1:])])    
+        imm=int(argument[2][1:])
+        Reg_val[int(argument[1][1:])]=r1>>imm
+
+        return opcodes[argument[0]]+Reg_dict[argument[1]]+str((bin(imm))[2:])
+
+
+
 def func_typ_C(argument):
     if argument[0]=="mov": #mov register
-        re1=int(Reg_val[int(argument[1][1:])-1])
-        Reg_val[int(argument[2][1:])-1]=str(re1)
+        re1=int(Reg_val[int(argument[1][1:])])
+        Reg_val[int(argument[2][1:])]=str(re1)
         
         return opcodes[argument[0]]+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
 
     elif argument[0]=="div":
         
-        re3=int(Reg_val[int(argument[1][1:])-1])
-        re4=int(Reg_val[int(argument[2][1:])-1])
+        re3=int(Reg_val[int(argument[1][1:])])
+        re4=int(Reg_val[int(argument[2][1:])])
         Reg_val[0]=str(re3//re4)
         Reg_val[1]=str(re3%re4)
 
@@ -43,16 +70,19 @@ def func_typ_C(argument):
 
 
     elif argument[0]=="not":
-        re1=int(Reg_val[int(argument[1][1:])-1])
-        re2=~(re1)
-        Reg_val[int(argument[2][1:])-1]=str(re2)
+        re1=int(Reg_val[int(argument[1][1:])])
+        re2=~(bin(re1)[2:])
+        re2=int(str(re2),2)
+        Reg_val[int(argument[2][1:])]=str(re2)
+
+        print(re2)
 
         return opcodes[argument[0]]+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
     
     
     elif argument[0]=="cmp":
-        re1=int(Reg_val[int(argument[1][1:])-1])
-        re2=int(Reg_val[int(argument[2][1:])-1])
+        re1=int(Reg_val[int(argument[1][1:])])
+        re2=int(Reg_val[int(argument[2][1:])])
         if re1==re2:
             Flags[3]="1"
         elif re1>re2:
@@ -71,17 +101,22 @@ def func_typ_D(argument,lno):
     mem=memadd.zfill(8)
     op=opcodes[argument[0]]
     # flag_setter()
-    
+
     reg=argument[1]
     var=argument[2]
 
     if argument[0] =="ld":
-        Reg_val[int(reg[1:])-1]=var_val[var]
+        Reg_val[int(reg[1:])]=var_val[var]
 
     elif argument[0]=="st":
-        var_val[var] =Reg_val[int(reg[1:])-1]
+        var_val[var] =Reg_val[int(reg[1:])]
 
     return op+rval+mem
 
-def func_typ_E():
+def func_typ_E(argument):
     pass
+
+def func_typ_F(argument):
+    if argument[0]=="hlt":
+        return opcodes["hlt"]+"00000000000"
+    
