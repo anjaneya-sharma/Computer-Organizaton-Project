@@ -49,7 +49,9 @@ def main():
 
         curr_line+=1
         
-        if line[0] in Reg_typ_B:
+        if line[0] in Reg_typ_A:
+            print(func_typ_A(line))
+        elif line[0] in Reg_typ_B:
             print(func_typ_B(line))
         elif line[0] in Reg_typ_C:
             print(func_typ_C(line))
@@ -372,6 +374,67 @@ def check_errors(code):
         return True
     
     return False
+
+def func_typ_A(argument):
+    if argument[0]=="add":
+        re2=int(Reg_val[int(argument[2][1:])])
+        re3=int(Reg_val[int(argument[3][1:])])
+
+        if re2+re3>65535:
+            flag_setter(1,0,0,0)
+        else:
+            Reg_val[int(argument[2][1:])]=str((re3+re2)%(2**16))
+
+        return opcodes[argument[0]]+"00"+Reg_dict[argument[1]]+Reg_dict[argument[2]]+Reg_dict[argument[3]]
+        
+    elif argument[0]=="sub":
+        re2=int(Reg_val[int(argument[2][1:])])
+        re3=int(Reg_val[int(argument[3][1:])])
+
+        if re2+re3<0:
+            flag_setter(1,0,0,0)
+        else:
+            Reg_val[int(argument[1][1:])]="0"
+
+        return opcodes[argument[0]]+"00"+Reg_dict[argument[1]]+Reg_dict[argument[2]]+Reg_dict[argument[3]]
+        
+    elif argument[0]=="mul":
+
+        re2=int(Reg_val[int(argument[2][1:])])
+        re3=int(Reg_val[int(argument[3][1:])])
+
+        if re2*re3>65535:
+            flag_setter(1,0,0,0)
+        else:
+            Reg_val[int(argument[1][1:])]=str((re3*re2)%(2**16))
+        
+        return opcodes[argument[0]]+"00"+Reg_dict[argument[1]]+Reg_dict[argument[2]]+Reg_dict[argument[3]]
+
+    elif argument[0]=="xor":
+        re2=int(Reg_val[int(argument[2][1:])])
+        re3=int(Reg_val[int(argument[3][1:])])
+
+        Reg_val[int(argument[1][1:])]=re2^re3
+        
+        return opcodes[argument[0]]+"00"+Reg_dict[argument[1]]+Reg_dict[argument[2]]+Reg_dict[argument[3]]
+
+    elif argument[0]=="or":
+        
+        re2=int(Reg_val[int(argument[2][1:])])
+        re3=int(Reg_val[int(argument[3][1:])])
+
+        Reg_val[int(argument[1][1:])]=re2|re3
+
+        return opcodes[argument[0]]+"00"+Reg_dict[argument[1]]+Reg_dict[argument[2]]+Reg_dict[argument[3]]
+
+    elif argument[0]=="and":
+        
+        re2=int(Reg_val[int(argument[2][1:])])
+        re3=int(Reg_val[int(argument[3][1:])])
+
+        Reg_val[int(argument[1][1:])]=re2 & re3
+
+        return opcodes[argument[0]]+"00"+Reg_dict[argument[1]]+Reg_dict[argument[2]]+Reg_dict[argument[3]]
 
 def func_typ_B(argument):
     if argument[0]=="mov":
