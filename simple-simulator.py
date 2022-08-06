@@ -15,6 +15,7 @@ Reg_typ_F=["hlt"]
 Flags=["0","0","0","0"] #(V,L,G,E)
 
 Reg_val=["0","0","0","0","0","0","0","0"]
+Reg_bin_val=["0","0","0","0","0","0","0","0"]
 
 def flag_setter(v=0,l=0,g=0,e=0):
     Flags[0]=str(v)
@@ -29,47 +30,82 @@ def func_typ_A(argument,prog_counter):
     ir2=int(argument[10:13],2)
     ir3=int(argument[13:16],2)
 
-    re1=int(Reg_val[ir1])
-    re2=int(Reg_val[ir2])
+    re1=int(Reg_bin_val[ir1])
+    re2=int(Reg_bin_val[ir2])
  
     op=argument[:5]
 
     if op=='10000':     #add
         if re1+re2>65535:
             flag_setter(1)
-            Reg_val[ir3]=str((re1+re2)%(2**16))
+            Reg_bin_val[ir3]=(str(bin((re1+re2)%(2**16))[2:]))
         else:
+            Reg_bin_val[ir3]=(str(bin(re1+re2))[2:])
             flag_setter()
-            Reg_val[ir3]=str(re1+re2)
+
 
     elif op=="10001":   #sub
         if re1 - re2 < 0:
             flag_setter(1)
-            Reg_val[ir3]='0'
+            Reg_bin_val[ir3]='0'
         else:
             flag_setter()
-            Reg_val[ir3]=str(re1-re2)
+            Reg_bin_val[ir3]=str((bin(re1-re2)[2:]))
+
 
     elif op=='10110':   #mul
         if re1*re2>65535:
-            Reg_val[ir3]=str((re1*re2)%(2**16))
+            Reg_bin_val[ir3]=(str(bin((re1*re2)%(2**16))[2:]))
+            flag_setter(1)
+        else:
+            Reg_bin_val[ir3]=(str(bin(re1*re2))[2:])
+
+
     elif op=='11010':   #xor
-        pass
+        for i,j in zip(re1,re2):
+            if i=='1' and j=='1':
+                Reg_bin_val[ir3]+='0'
+            elif i=='1' and j=='0':
+                Reg_bin_val[ir3]+='1'
+            elif i=='0' and j=='1':
+                Reg_bin_val[ir3]+='1'
+            elif i=='0' and j=='0':
+                Reg_bin_val[ir3]+='0'
+    
+    
     elif op=='11011':   #or
-        pass
+        for i,j in zip(re1,re2):
+            if i=='1' and j=='1':
+                Reg_bin_val[ir3]+='1'
+            elif i=='1' and j=='0':
+                Reg_bin_val[ir3]+='1'
+            elif i=='0' and j=='1':
+                Reg_bin_val[ir3]+='1'
+            elif i=='0' and j=='0':
+                Reg_bin_val[ir3]+='0'
+    
+    
     elif op=='11100':   #and
-        pass
+        for i,j in zip(re1,re2):
+            if i=='1' and j=='1':
+                Reg_bin_val[ir3]+='1'
+            elif i=='1' and j=='0':
+                Reg_bin_val[ir3]+='0'
+            elif i=='0' and j=='1':
+                Reg_bin_val[ir3]+='0'
+            elif i=='0' and j=='0':
+                Reg_bin_val[ir3]+='0'
     
 def func_type_B(argument,prog_counter):
     ir1=int(argument[5:8],2)
     # re1=int(Reg_val[ir1])
-    imm=int(argument[8:16],2)
+    imm=int(argument[8:16])
 
     flag_setter()
     op=argument[:5]
 
     if op=='10010':
-        Reg_val[ir1]=imm
+        Reg_bin_val[ir1]=imm
     elif op=='11000':
         pass
     elif op=='11001':
