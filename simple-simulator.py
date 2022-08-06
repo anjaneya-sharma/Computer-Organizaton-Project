@@ -14,8 +14,10 @@ Reg_typ_F=["hlt"]
 
 Flags=["0","0","0","0"] #(V,L,G,E)
 
+global Reg_val
 Reg_val=["0","0","0","0","0","0","0","0"]
 
+global Reg_bin_val
 Reg_bin_val=["00000000","00000000","00000000","00000000","00000000","00000000","00000000","00000000"]
 
 def flag_setter(v=0,l=0,g=0,e=0):
@@ -60,9 +62,11 @@ def func_typ_A(argument,prog_counter):
             flag_setter(1)
         else:
             Reg_bin_val[ir3]=(str(bin(re1*re2))[2:])
+            flag_setter()
 
 
     elif op=='11010':   #xor
+        flag_setter()
         for i,j in zip(re1,re2):
             if i=='1' and j=='1':
                 Reg_bin_val[ir3]+='0'
@@ -75,6 +79,7 @@ def func_typ_A(argument,prog_counter):
     
     
     elif op=='11011':   #or
+        flag_setter()
         for i,j in zip(re1,re2):
             if i=='1' and j=='1':
                 Reg_bin_val[ir3]+='1'
@@ -87,6 +92,7 @@ def func_typ_A(argument,prog_counter):
     
     
     elif op=='11100':   #and
+        flag_setter()
         for i,j in zip(re1,re2):
             if i=='1' and j=='1':
                 Reg_bin_val[ir3]+='1'
@@ -142,6 +148,7 @@ def func_type_C(argument ,prog_counter):
 
     
     elif op=='11101':#not
+        flag_setter()
         re1=(Reg_bin_val[ir1])
         for i in re1:
             if i=='1':
