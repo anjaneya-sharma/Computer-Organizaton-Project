@@ -18,7 +18,7 @@ global Reg_val
 Reg_val=["0","0","0","0","0","0","0","0"]
 
 global Reg_bin_val
-Reg_bin_val=["00000000","00000000","00000000","00000000","00000000","00000000","00000000","00000000"]
+Reg_bin_val=["0000000000000000","0000000000000000","0000000000000000","0000000000000000","0000000000000000","0000000000000000","0000000000000000","0000000000000000"]
 
 def flag_setter(v=0,l=0,g=0,e=0):
     Flags[0]=str(v)
@@ -103,7 +103,7 @@ def func_typ_A(argument,prog_counter):
             elif i=='0' and j=='0':
                 Reg_bin_val[ir3]+='0'
     
-    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(8)+" "+Reg_bin_val[1].zfill(8)+" "+Reg_bin_val[2].zfill(8)+" "+Reg_bin_val[3].zfill(8)+" "+Reg_bin_val[4].zfill(8)+" "+Reg_bin_val[5].zfill(8)+" "+Reg_bin_val[6].zfill(8)+" "+Reg_bin_val[7].zfill(8))
+    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
 
 def func_type_B(argument,prog_counter):
     ir1=int(argument[5:8],2)
@@ -114,14 +114,14 @@ def func_type_B(argument,prog_counter):
     op=argument[:5]
 
     if op=='10010':#mov imm
-        Reg_bin_val[ir1]=bin(imm)[2:]
+        Reg_bin_val[ir1]=bin(immi)[2:]
 
     elif op=='11000':#bitwise rs
         Reg_bin_val[ir1]=Reg_bin_val[ir1]>>immi
     elif op=='11001':#bitwise ls
         Reg_bin_val[ir1]=Reg_bin_val[ir1]<<immi
     
-    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(8)+" "+Reg_bin_val[1].zfill(8)+" "+Reg_bin_val[2].zfill(8)+" "+Reg_bin_val[3].zfill(8)+" "+Reg_bin_val[4].zfill(8)+" "+Reg_bin_val[5].zfill(8)+" "+Reg_bin_val[6].zfill(8)+" "+Reg_bin_val[7].zfill(8))
+    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
 
 def func_type_C(argument ,prog_counter):
     ir1=int(argument[10:13],2)
@@ -167,7 +167,7 @@ def func_type_C(argument ,prog_counter):
         elif re1<re2:
             Flags[1]='1'
     
-    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(8)+" "+Reg_bin_val[1].zfill(8)+" "+Reg_bin_val[2].zfill(8)+" "+Reg_bin_val[3].zfill(8)+" "+Reg_bin_val[4].zfill(8)+" "+Reg_bin_val[5].zfill(8)+" "+Reg_bin_val[6].zfill(8)+" "+Reg_bin_val[7].zfill(8))
+    return  str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
 
 def func_type_D(argument,prog_counter):
     op=argument[:5]
@@ -188,23 +188,29 @@ def func_type_E(argument,prog_counter):
 
     if op=='01100':#jlt
         if Flags[1]!='1':
-            add='0'
+            add=-1
     
     elif op=='01101':#jgt
         if Flags[2]!='1':
-            add='0'
+            add=-1
 
     elif op=='01111':#je
         if Flags[3]!='1':
-            add='0'
+            add=-1
     
     flag_setter()
 
-    ret_str=str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(8)+" "+Reg_bin_val[1].zfill(8)+" "+Reg_bin_val[2].zfill(8)+" "+Reg_bin_val[3].zfill(8)+" "+Reg_bin_val[4].zfill(8)+" "+Reg_bin_val[5].zfill(8)+" "+Reg_bin_val[6].zfill(8)+" "+Reg_bin_val[7].zfill(8))
+    ret_str=str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
 
     ret_lst=[add,ret_str]
 
     return ret_lst
+
+def func_type_F(argument,prog_counter):
+
+    flag_setter()
+    ret_str=str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
+    return ret_str
 
 def main():
     
@@ -232,9 +238,10 @@ def main():
     global code_output
     code_output=[]
     
-    while (not is_hlt):
+    while (PC<256 and not is_hlt):
 
         PC_in_binary=bin(PC)[2:].zfill(8)
+        print(PC)
         current_instruction=memory[PC_in_binary]
 
         if current_instruction[:5] in ['10000','10001','10110','11010','11011','11100']:
@@ -250,19 +257,29 @@ def main():
             code_output.append(func_type_D(current_instruction,PC_in_binary))
 
         elif current_instruction[:5] in ['11111','01100','01101','01111']:
+##            temp=func_type_E(current_instruction,PC_in_binary)
+##
+##            if temp[0]==-1:
+##                code_output.append(temp[1])
+##
+##            elif temp[0]!=-1:
+##                PC=temp[0]
+##                code_output.append(temp[1])
+##                PC-=1
             code_output.append(func_type_E(current_instruction,PC_in_binary))
-
+                
         elif current_instruction[:5] in ['01010']:
             code_output.append(func_type_F(current_instruction,PC_in_binary))
+            
         else:
             code_output.append('error')
 
         PC+=1
 
-    output=sys.stdout
     for i in code_output:
-        output.write(i)
+        if i!='error':
+            print(i)
     for i in memory.values():
-        output.write(i)
+        print(i)
         
 main()
