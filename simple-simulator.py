@@ -251,6 +251,11 @@ def main():
             code_output.append('error')
 
         PC+=1
-        
+
+    output=sys.stdout
+    for i in code_output:
+        output.write(i)
+    for i in memory.values():
+        output.write(i)
         
 main()
