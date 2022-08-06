@@ -180,17 +180,22 @@ def func_typ_D(argument,lno):
     mem=memadd.zfill(8)
     op=opcodes[argument[0]]
     # flag_setter()
-
+    
     reg=argument[1]
     var=argument[2]
 
-    if argument[0] =="ld":
-        Reg_val[int(reg[1:])]=var_val[var]
+    my_var=bin(cnt+list_var.index(var))[2:].zfill(8)
 
-    elif argument[0]=="st":
-        var_val[var] =Reg_val[int(reg[1:])]
+##    if argument[0] =="ld":
+##        Reg_val[int(reg[1:])]=var_val[var]
 
-    return op+rval+mem
+##    elif argument[0]=="st":
+##        var_val[var] =Reg_val[int(reg[1:])]
+
+##    return op+rval+mem
+
+    return op+rval+my_var
+
 
 def func_typ_E(argument):
 
@@ -200,7 +205,7 @@ def func_typ_E(argument):
         return '01101'+'000'+bin(label_mem_dict[argument[1]])[2:].zfill(8)
     elif argument[0]=='je':
         return '01111'+'000'+bin(label_mem_dict[argument[1]])[2:].zfill(8)
-    elif argument[0]=='jml':
+    elif argument[0]=='jmp':
         return '11111'+'000'+bin(label_mem_dict[argument[1]])[2:].zfill(8)
 
 def func_typ_F(argument):
@@ -483,6 +488,9 @@ def main():
             break
         code.append(line.lower().split())
 
+    while [] in code:
+        code.remove([])
+
     global var_val
     var_val={}
 
@@ -501,8 +509,12 @@ def main():
     
     code=[i for i in code if i!=[]]
 
+    global cnt
+    cnt=0
+    for i in code:
+        if i[0]!='var':
+            cnt+=1
+        
     check_errors(code)
 
-    return
-        
 main()
