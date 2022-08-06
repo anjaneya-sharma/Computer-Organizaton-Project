@@ -118,12 +118,22 @@ def func_typ_B(argument,current_line):
 
 
 def func_typ_C(argument):
+    
     if argument[0]=="mov": #mov register
-        re1=int(Reg_val[int(argument[1][1:])])
-        Reg_val[int(argument[2][1:])]=str(re1)
         
-        return opcodes[argument[0]]+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
+        try:
+            
+            re1=int(Reg_val[int(argument[1][1:])])
+            Reg_val[int(argument[2][1:])]=str(re1)
+            
+            return "10011"+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
+    
+        except ValueError:
+            re1=int(Reg_val[7])
+            Reg_val[int(argument[2][1:])]=str(re1)
 
+            return '10011'+"00000"+Reg_dict[argument[1]]+Reg_dict[argument[2]]
+        
     elif argument[0]=="div":
         
         re3=int(Reg_val[int(argument[1][1:])])
@@ -306,8 +316,6 @@ def check_typeE(instruction):
 
     return True
 
-
-
 def check_mov(instruction):
 
     list_of_registers=list(Reg_dict.keys())
@@ -315,36 +323,43 @@ def check_mov(instruction):
     if len(instruction)!=3:
         print('Error at line {} : General Syntax Error'.format(current_line))
         return False
-    
-    if instruction[1] not in list_of_registers[:7]:
-        if instruction[1]=='flags':
-            print('Error at line {} : illegal use of flag registers'.format(current_line))
-            return False
+
+    if instruction[1] not in list_of_registers:
         if instruction[1][0]=='r':
             print('Error at line {} : invalid register name'.format(current_line))
             return False
-        print("Error at line {} : General Syntax Error".format(current_line))
-        return False
-
-    if instruction[2][0]=='r' and instruction[2] not in list_of_registers:
-        print('Error at line {} : invalid register name'.format(current_line))
-        return False
-
-    if instruction[2][0]=='r' and instruction[2] in list_of_registers:
-        return True
-    
-    if instruction[2][0]=='$':
-        try:
-            temp=int(instruction[2][1:])
-            if temp>=256 or temp<0:
-                print('Error at line {} : illegal immediate value'.format(current_line))
-                return False
-        except ValueError:
+        else:
             print('Error at line {} : General Syntax Error'.format(current_line))
             return False
-    
-    return True
 
+    if instruction[1] in list_of_registers:
+        if instruction[2] in list_of_registers:
+            if instruction[2]=='flags':
+                print('Error at line {} : Illegal use of flags register'.format(current_line))
+                return False
+            else:
+                return True
+        elif instruction[2][0]!='$':
+            if instruction[2][0]=='r':
+                print('Error at line {} : invalid register name'.format(current_line))
+                return False
+            print('Error at line {} : General Syntax Error'.format(current_line))
+            return False
+
+        else:
+            if instruction[1]=='flags':
+                print('Error at line {} : Illegal use of flags register'.format(current_line))
+                return False
+            try:
+                temp=int(instruction[2][1:])
+                if temp>=256 or temp<0:
+                    print('Error at line {} : illegal immediate value'.format(current_line))
+                    return False
+            except ValueError:
+                print('Error at line {} : General Syntax Error'.format(current_line))
+                return False
+                
+    return True
 
 def check_errors(code):
 
@@ -362,7 +377,7 @@ def check_errors(code):
     count_var=0
 
     global list_label
-    list_label=[]
+    list_label=label_mem_dict.keys()
 
     global count_hlt
     count_hlt=0
@@ -473,13 +488,16 @@ def main():
 
     global label_mem_dict
     label_mem_dict={}
-    j=0
+    j=-1
 
     for i in code:
         j+=1
         if i[0].find(':')!=-1:
             label_mem_dict[i[0][:len(i[0])-1]]=j
             code[code.index(i)]=code[code.index(i)][1:]
+        if i[0]=='var':
+            j-=1
+            
     
     code=[i for i in code if i!=[]]
 
