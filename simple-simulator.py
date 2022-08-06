@@ -103,7 +103,7 @@ def func_typ_A(argument,prog_counter):
             elif i=='0' and j=='0':
                 Reg_bin_val[ir3]+='0'
     
-    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
+    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[5].zfill(16)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
 
 def func_type_B(argument,prog_counter):
     ir1=int(argument[5:8],2)
@@ -121,7 +121,7 @@ def func_type_B(argument,prog_counter):
     elif op=='11001':#bitwise ls
         Reg_bin_val[ir1]=Reg_bin_val[ir1]<<immi
     
-    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
+    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[5].zfill(16)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
 
 def func_type_C(argument ,prog_counter):
     ir1=int(argument[10:13],2)
@@ -167,7 +167,7 @@ def func_type_C(argument ,prog_counter):
         elif re1<re2:
             Flags[1]='1'
     
-    return  str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
+    return  str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[5].zfill(16)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
 
 def func_type_D(argument,prog_counter):
     op=argument[:5]
@@ -180,7 +180,7 @@ def func_type_D(argument,prog_counter):
         memory[mem_add]=Reg_bin_val[re1]
 
     flag_setter()
-    return str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(8)+" "+Reg_bin_val[1].zfill(8)+" "+Reg_bin_val[2].zfill(8)+" "+Reg_bin_val[3].zfill(8)+" "+Reg_bin_val[4].zfill(8)+" "+Reg_bin_val[5].zfill(8)+" "+Reg_bin_val[6].zfill(8)+" "+Reg_bin_val[7].zfill(8))
+    return  str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[5].zfill(16)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
 
 def func_type_E(argument,prog_counter):
     op=argument[:5]
@@ -200,7 +200,7 @@ def func_type_E(argument,prog_counter):
     
     flag_setter()
 
-    ret_str=str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
+    ret_str=return  str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[5].zfill(16)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
 
     ret_lst=[add,ret_str]
 
@@ -209,7 +209,7 @@ def func_type_E(argument,prog_counter):
 def func_type_F(argument,prog_counter):
 
     flag_setter()
-    ret_str=str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[16].zfill(8)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
+    ret_str=return  str((prog_counter.zfill(8))+" "+Reg_bin_val[0].zfill(16)+" "+Reg_bin_val[1].zfill(16)+" "+Reg_bin_val[2].zfill(16)+" "+Reg_bin_val[3].zfill(16)+" "+Reg_bin_val[4].zfill(16)+" "+Reg_bin_val[5].zfill(16)+" "+Reg_bin_val[6].zfill(16)+" "+Reg_bin_val[7].zfill(16))
     return ret_str
 
 def main():
