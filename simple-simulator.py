@@ -38,10 +38,32 @@ def main():
 
     is_hlt=False
     
-    while (PC<256 and not is_hlt):
+    while (not is_hlt):
 
-        current_instruction=bin(PC)[2:].zfill(8)
+        PC_in_binary=bin(PC)[2:].zfill(8)
+        current_instruction=memory_dict[PC_in_binary]
 
+        if current_instruction[:5] in ['10000','10001','10110','11010','11011','11100']:
+            code_output.append(func_typ_A(current_instruction,PC_in_binary))
+
+        elif current_instruction[:5] in ['10010','11000','11001']:
+            code_output.append(func_typ_B(current_instruction,PC_in_binary))
+
+        elif current_instruction[:5] in ['10011','10111','11101','11110']:
+            code_output.append(func_typ_C(current_instruction,PC_in_binary))
+
+        elif current_instruction[:5] in ['10100','10101']:
+            code_output.append(func_typ_D(current_instruction,PC_in_binary))
+
+        elif current_instruction[:5] in ['11111','01100','01101','01111']:
+            code_output.append(func_typ_E(current_instruction,PC_in_binary))
+
+        elif current_instruction[:5] in ['01010']:
+            code_output.append(func_typ_F(current_instruction,PC_in_binary))
+        else:
+            code_output.append('error')
+
+        PC+=1
         
         
 main()
