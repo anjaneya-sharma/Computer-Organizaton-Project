@@ -76,8 +76,8 @@ def func_type_B(argument,prog_counter):
         pass
 
 def func_type_C(argument ,prog_counter):
-    ir1=int(argument[10:13])
-    ir2=int(argument[13:16])
+    ir1=int(argument[10:13],2)
+    ir2=int(argument[13:16],2)
     op=argument[:5]
 
     if op=='10111': #mov reg
@@ -122,5 +122,15 @@ def func_type_D(argument,prog_counter):
     flag_setter()
 
 def func_type_E(argument,prog_counter):
-    pass
+    op=argument[:5]
+
+    if op=='11111' :#jmp
+        pass
+    elif op=='01100':#jlt
+        pass
+    elif op=='01101':#jgt
+        pass
+    elif op=='01111':#je
+        pass
+
 
